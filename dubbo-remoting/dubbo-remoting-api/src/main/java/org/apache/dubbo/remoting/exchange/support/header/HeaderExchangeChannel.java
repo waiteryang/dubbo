@@ -92,9 +92,7 @@ final class HeaderExchangeChannel implements ExchangeChannel {
         if (closed) {
             throw new RemotingException(this.getLocalAddress(), null, "Failed to send message " + message + ", cause: The channel " + this + " is closed!");
         }
-        if (message instanceof Request
-                || message instanceof Response
-                || message instanceof String) {
+        if (message instanceof Request || message instanceof Response || message instanceof String) {
             channel.send(message, sent);
         } else {
             Request request = new Request();
@@ -130,13 +128,16 @@ final class HeaderExchangeChannel implements ExchangeChannel {
         req.setVersion(Version.getProtocolVersion());
         req.setTwoWay(true);
         req.setData(request);
+        // 创建 DefaultFuture 对象
         DefaultFuture future = DefaultFuture.newFuture(channel, req, timeout, executor);
         try {
+            //调用 NettyClient的send 方法发送请求
             channel.send(req);
         } catch (RemotingException e) {
             future.cancel();
             throw e;
         }
+        // 返回 DefaultFuture
         return future;
     }
 
@@ -168,8 +169,7 @@ final class HeaderExchangeChannel implements ExchangeChannel {
         }
         if (timeout > 0) {
             long start = System.currentTimeMillis();
-            while (DefaultFuture.hasFuture(channel)
-                    && System.currentTimeMillis() - start < timeout) {
+            while (DefaultFuture.hasFuture(channel) && System.currentTimeMillis() - start < timeout) {
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {

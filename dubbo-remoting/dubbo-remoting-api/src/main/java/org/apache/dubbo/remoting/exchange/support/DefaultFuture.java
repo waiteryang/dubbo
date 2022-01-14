@@ -82,6 +82,7 @@ public class DefaultFuture extends CompletableFuture<Object> {
         this.id = request.getId();
         this.timeout = timeout > 0 ? timeout : channel.getUrl().getPositiveParameter(TIMEOUT_KEY, DEFAULT_TIMEOUT);
         // put into waiting map.
+        // 存储 <requestId, DefaultFuture> 映射关系到 FUTURES 中
         FUTURES.put(id, this);
         CHANNELS.put(id, channel);
     }

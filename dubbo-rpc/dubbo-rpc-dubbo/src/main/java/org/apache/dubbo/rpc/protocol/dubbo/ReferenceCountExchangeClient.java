@@ -51,6 +51,7 @@ final class ReferenceCountExchangeClient implements ExchangeClient {
 
     public ReferenceCountExchangeClient(ExchangeClient client) {
         this.client = client;
+        //引用计数自增
         referenceCount.incrementAndGet();
         this.url = client.getUrl();
     }
@@ -62,6 +63,7 @@ final class ReferenceCountExchangeClient implements ExchangeClient {
 
     @Override
     public CompletableFuture<Object> request(Object request) throws RemotingException {
+        // 直接调用被装饰对象的同签名方法
         return client.request(request);
     }
 
